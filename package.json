@@ -1,0 +1,44 @@
+{
+  "name": "gh-user",
+  "version": "1.0",
+  "description": "User microservice for GroundHall",
+  "main": "index.js",
+  "author": "Kristiyan Serafimov (ChrispCode)",
+  "license": "MIT",
+  "scripts": {
+    "test": "ava --verbose",
+    "docker-test": "yarn run build && yarn run bootstrap && yarn test",
+    "build": "webpack",
+    "bootstrap": "webpack && node ./build/bootstrap.js",
+    "start": "node ./build/backend.js",
+    "debug": "webpack && node --inspect-brk=0.0.0.0:9229 ./build/backend.js",
+    "docker": "docker-compose -f docker-compose/development.yml up -d",
+    "dev-watch-webpack": "webpack --watch",
+    "dev-watch-backend": "nodemon --inspect-brk=9229 ./build/backend.js"
+  },
+  "dependencies": {
+    "add": "^2.0.6",
+    "ava": "^0.21.0",
+    "babel-plugin-transform-decorators": "^6.24.1",
+    "babel-polyfill": "^6.23.0",
+    "bluebird": "^3.5.0",
+    "boom": "^5.1.0",
+    "colors": "^1.1.2",
+    "dateformat": "^2.0.0",
+    "eslint-plugin-react": "^7.6.1",
+    "global": "^4.3.2",
+    "hapi": "^16.4.3",
+    "joi": "^10.6.0",
+    "rethinkdbdash": "^2.3.29",
+    "webpack": "^3.1.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-loader": "^7.1.1",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-preset-es2017": "^6.24.1"
+  },
+  "ava": {
+    "babel": "inherit"
+  }
+}

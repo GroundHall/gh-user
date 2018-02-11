@@ -1,0 +1,22 @@
+/**
+ * This file handles the model/models for
+ * the perticular microservice
+ */
+
+import Joi from 'joi';
+
+export const UserModel = Joi.object({
+  firstName: Joi.string(),
+  lastName: Joi.string(),
+  email: Joi.string().email(),
+  password: Joi.string(),
+  type: Joi.string() // oneOf(['teacher', 'student', 'admin'])
+}).required();
+
+export const UserModelRequired = Joi.object({
+  firstName: Joi.string().required(),
+  lastName: Joi.string().required(),
+  email: Joi.string().email().required(),
+  password: Joi.string().required(),
+  type: Joi.string().required() // oneOf(['teacher', 'student', 'admin'])
+}).required();
