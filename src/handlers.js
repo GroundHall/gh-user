@@ -65,6 +65,66 @@ class Handlers {
       .update(payload, {returnChanges: true})
   }
 
+  static sendFriendRequest(request, reply) {
+    const { payload: {fromId, toId} } = request;
+    return Promise.all([
+      r.table(env.DB_TABLE_NAME).get(toId).update({
+        receivedFriendRequests: r.row('receivedFriendRequests').append(fromId)
+      }),
+      r.table(env.DB_TABLE_NAME).get(fromId).update({
+        sendFriendRequests: r.row('sendFriendRequests').append(toId)
+      })
+    ]).then(result => {
+      reply(result)
+    }).catch(error => {
+      reply(Boom.badImplementation(error));
+    })
+  }
+
+  static cancelFriendRequest(request, reply) {
+    const { payload: {fromId, toId} } = request;
+    return Promise.all([
+      r.table(env.DB_TABLE_NAME).get(toId).update({
+        receivedFriendRequests: r.row('receivedFriendRequests')
+        .filter(function (item) { return item.ne(fromId) }),
+      }),
+      r.table(env.DB_TABLE_NAME).get(fromId).update({
+        sendFriendRequests: r.row('receivedFriendRequests')
+        .filter(function (item) { return item.ne(toId) }),
+      })
+    ]).then(result => {
+      reply(result)
+    }).catch(error => {
+      reply(Boom.badImplementation(error));
+    })
+  }
+
+  static acceptFriendRequest(request, reply) {
+    // fromId => from whom I received it
+    // toId => I
+    const { payload: { fromId, toId } } = request;
+    return Promise.all([
+      r.table(env.DB_TABLE_NAME).get(toId).update({
+        receivedFriendRequests: r.row('receivedFriendRequests')
+        .filter(function (item) { return item.ne(fromId) }),
+      }),
+      r.table(env.DB_TABLE_NAME).get(fromId).update({
+        sendFriendRequests: r.row('receivedFriendRequests')
+        .filter(function (item) { return item.ne(toId) }),
+      }),
+      r.table(env.DB_TABLE_NAME).get(toId).update({
+        friends: r.row('friends').append(fromId)
+      }),
+      r.table(env.DB_TABLE_NAME).get(fromId).update({
+        friends: r.row('friends').append(toId)
+      })
+    ]).then(result => {
+      reply(result)
+    }).catch(error => {
+      reply(Boom.badImplementation(error));
+    })
+  }
+
   @ReplyPromiseResponse
   static deleteUser(request) {
     const { userId } = request.params;

@@ -6,7 +6,7 @@
 import Joi from 'joi';
 
 const schema = Joi.object({
-  SERVICE_PORT: Joi.number().default(80),
+  SERVICE_PORT: Joi.number().default(8005),
   NODE_ENV: Joi.string().default('production'),
   HOST: Joi.string().default('localhost'),
   DB_DRIVER_PORT: Joi.number().positive().default(28015),

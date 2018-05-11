@@ -1,3 +1,5 @@
+import Joi from 'joi';
+
 import Handlers from './handlers';
 
 import {
@@ -49,6 +51,45 @@ const routes = [
     config: {
       validate: {
         payload: UserModel
+      }
+    }
+  },
+  {
+    method: 'PATCH',
+    path: '/users/sendFriendRequest',
+    handler: Handlers.sendFriendRequest,
+    config: {
+      validate: {
+        payload: {
+          fromId: Joi.string().required(),
+          toId: Joi.string().required()
+        }
+      }
+    }
+  },
+  {
+    method: 'PATCH',
+    path: '/users/cancelFriendRequest',
+    handler: Handlers.cancelFriendRequest,
+    config: {
+      validate: {
+        payload: {
+          fromId: Joi.string().required(),
+          toId: Joi.string().required()
+        }
+      }
+    }
+  },
+  {
+    method: 'PATCH',
+    path: '/users/acceptFriendRequest',
+    handler: Handlers.acceptFriendRequest,
+    config: {
+      validate: {
+        payload: {
+          fromId: Joi.string().required(),
+          toId: Joi.string().required()
+        }
       }
     }
   },
